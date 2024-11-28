@@ -22,6 +22,9 @@ public:
     const string toString() const;
     const int getConstructionLimit() const;
 
+    // Added as r5
+    ~Settlement();
+
 private:
     const string name;
     SettlementType type;
