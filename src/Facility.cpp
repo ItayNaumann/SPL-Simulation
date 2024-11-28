@@ -1,65 +1,72 @@
 #include <Facility.h>
-
+#include <string>
+#include <sstream>
 
 // FacilityType
-FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score){
-    FacilityType::name = &name;
-    FacilityType::category = category;
-    FacilityType::price = price;
-    FacilityType::lifeQuality_score = lifeQuality_score;
-    FacilityType::economy_score = economy_score;
-    Facility::environment_score = environment_score;
+FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score) : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score)
+{
 }
-const string& FacilityType::getName(){
-    const string& output = &name;
-    return output;
+const string &FacilityType::getName() const
+{
+    return name;
 }
-int FacilityType::getCost(){
-    return FacilityType::name;
+int FacilityType::getCost() const
+{
+    return price;
 }
-int FacilityType::getLifeQualityScore(){
+int FacilityType::getLifeQualityScore() const
+{
     return FacilityType::lifeQuality_score;
 }
-int FacilityType::getEconomyScore(){
+int FacilityType::getEconomyScore() const
+{
     return FacilityType::economy_score;
 }
-int FacilityType::getEnvironmentScore(){
+int FacilityType::getEnvironmentScore() const
+{
     return FacilityType::environment_score;
 }
-FacilityCategory FacilityType::getCategory(){
+FacilityCategory FacilityType::getCategory() const
+{
     return FacilityType::category;
 }
+
 // add rule of 5/3
 
 // Facility
-    Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score){
-        FacilityType::FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score);
-        Facility::settlementName = &settlementName;
-        Facility::status = FacilityStatus::UNDER_CONSTRUCTIONS;
+Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price,
+                   const int lifeQuality_score, const int economy_score, const int environment_score)
+    : settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS),
+      FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score) { timeLeft = getCost(); }
+Facility::Facility(const FacilityType &type, const string &settlementName)
+    : FacilityType(type), settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS) { timeLeft = getCost(); }
+const string &Facility::getSettlementName() const
+{
+    return settlementName;
+}
+const int Facility::getTimeLeft() const
+{
+    return timeLeft;
+}
+FacilityStatus Facility::step()
+{
+    timeLeft--;
+    if (timeLeft == 0)
+    {
+        Facility::status = FacilityStatus::OPERATIONAL;
     }
-    Facility::Facility(const FacilityType &type, const string &settlementName){
-        // Copy constructor??
-
-        Facility::settlementName = &settlementName;
-    }
-    const string& Facility::getSettlementName(){
-        const string& output = &Facility::settlementName;
-        return output;
-    }
-    const int getTimeLeft(){
-        return Facility::timeLeft;
-    }
-    FacilityStatus Facility::step(){
-        // tf is this
-    }
-    void Facility::setStatus(FacilityStatus status){
-        Facility::status = status;
-    }
-    const FacilityStatus& Facility::getStatus(){
-        FacilityStatus &output = Facility::status;
-        return output;
-    }
-    const string Facility::toString(){
-        // unknown info
-    }
-
+}
+void Facility::setStatus(FacilityStatus status)
+{
+    Facility::status = status;
+}
+const FacilityStatus &Facility::getStatus() const
+{
+    return status;
+}
+const string Facility::toString() const
+{
+    std::ostringstream oss;
+    oss << "facility " << name << " " << static_cast<int>(category) << " " << price << " " << lifeQuality_score << " " << economy_score << " " << environment_score;
+    return oss.str();
+}
