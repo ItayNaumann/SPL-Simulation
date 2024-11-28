@@ -1,5 +1,6 @@
 #include "Plan.h"
 #include <iostream>
+#include <algorithm>
 
 void Plan::step()
 {
@@ -10,15 +11,15 @@ void Plan::step()
             FacilityStatus facilityStatus = facility->step();
             if (facilityStatus == FacilityStatus::OPERATIONAL)
             {
-                // facilities.erase(
-                //     std::remove_if(
-                //         facilities.begin(),
-                //         facilities.end(),
-                //         [&](Facility const &node)
-                //         {
-                //             return node. == candidateNode.id && node.position == candidateNode.position;
-                //         }),
-                //     candidateNodes.end());
+                underConstruction.erase(
+                    std::remove_if(
+                        underConstruction.begin(),
+                        underConstruction.end(),
+                        [&](Facility *node)
+                        {
+                            return node == facility;
+                        }),
+                    underConstruction.end());
             }
         }
         status = underConstruction.size() == this->settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVALIABLE;
