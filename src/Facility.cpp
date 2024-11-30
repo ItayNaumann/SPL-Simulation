@@ -1,6 +1,8 @@
 #include <Facility.h>
 #include <string>
+#include <iostream>
 #include <sstream>
+using namespace std;
 
 // FacilityType
 FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score) : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score)
@@ -66,7 +68,13 @@ const FacilityStatus &Facility::getStatus() const
 }
 const string Facility::toString() const
 {
-    std::ostringstream oss;
-    oss << "facility " << name << " " << static_cast<int>(category) << " " << price << " " << lifeQuality_score << " " << economy_score << " " << environment_score;
+    std::stringstream ss;
+    ss << "facility ";
+    ss << name << " ";
+    ss << static_cast<int>(category) << " ";
+    ss << price << " ";
+    ss << lifeQuality_score << " ";
+    ss << economy_score << " ";
+    ss << environment_score;
     return oss.str();
 }
