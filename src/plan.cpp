@@ -52,7 +52,7 @@ void Plan::step()
         FacilityStatus facilityStatus = facility->step();
         if (facilityStatus == FacilityStatus::OPERATIONAL)
         {
-            addFaicility(facility);
+            this->addFacility(facility);
         }
     }
     status = underConstruction.size() == settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVALIABLE;
