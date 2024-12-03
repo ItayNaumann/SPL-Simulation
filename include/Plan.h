@@ -25,6 +25,14 @@ public:
     void addFacility(Facility *facility);
     const string toString() const;
 
+    // getters
+    PlanStatus getPlanStatus() const;
+    const Settlement& getSettlement() const;
+    vector<Facility *> &getUnderConstruction();
+    SelectionPolicy *getSelectionPolicy();
+    const vector<FacilityType> &getFacilityOptions() const;
+    
+
     // rule of 5
     Plan(const Plan &other);
     ~Plan();
@@ -32,7 +40,7 @@ public:
 private:
     int plan_id;
     const Settlement &settlement;
-    SelectionPolicy *selectionPolicy; // What happens if we change this to a reference?
+    SelectionPolicy *selectionPolicy; // What happens if we change this to a reference? You cant change it if its a reference
     PlanStatus status;
     vector<Facility *> facilities;
     vector<Facility *> underConstruction;
