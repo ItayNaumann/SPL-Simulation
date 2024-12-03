@@ -33,13 +33,13 @@ FacilityCategory FacilityType::getCategory() const
     return FacilityType::category;
 }
 
-// add rule of 5/3
 
 // Facility
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price,
                    const int lifeQuality_score, const int economy_score, const int environment_score)
     : settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS),
       FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score) { timeLeft = getCost(); }
+
 Facility::Facility(const FacilityType &type, const string &settlementName)
     : FacilityType(type), settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS) { timeLeft = getCost(); }
 const string &Facility::getSettlementName() const
@@ -76,5 +76,5 @@ const string Facility::toString() const
     ss << lifeQuality_score << " ";
     ss << economy_score << " ";
     ss << environment_score;
-    return oss.str();
+    return ss.str();
 }

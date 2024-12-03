@@ -28,6 +28,8 @@ public:
     int getEconomyScore() const;
     FacilityCategory getCategory() const;
 
+    
+
 protected:
     const string name;
     const FacilityCategory category;

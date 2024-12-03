@@ -33,6 +33,11 @@ class BalancedSelection: public SelectionPolicy {
         int LifeQualityScore;
         int EconomyScore;
         int EnvironmentScore;
+
+        // Auxiliary methods
+        int BalancedSelection::distance(const FacilityType& Facility);
+
+        
 };
 
 class EconomySelection: public SelectionPolicy {
@@ -44,7 +49,6 @@ class EconomySelection: public SelectionPolicy {
         ~EconomySelection() override = default;
     private:
         int lastSelectedIndex;
-
 };
 
 class SustainabilitySelection: public SelectionPolicy {
