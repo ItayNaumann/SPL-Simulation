@@ -3,7 +3,7 @@
 #include "Facility.h"
 #include "Settlement.h"
 #include "SelectionPolicy.h"
-using std::vector;
+using namespace std;
 
 enum class PlanStatus
 {
@@ -27,11 +27,10 @@ public:
 
     // getters
     PlanStatus getPlanStatus() const;
-    const Settlement& getSettlement() const;
+    const Settlement &getSettlement() const;
     vector<Facility *> &getUnderConstruction();
     SelectionPolicy *getSelectionPolicy();
     const vector<FacilityType> &getFacilityOptions() const;
-    
 
     // rule of 5
     Plan(const Plan &other);

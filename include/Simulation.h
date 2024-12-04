@@ -4,8 +4,7 @@
 #include "Facility.h"
 #include "Plan.h"
 #include "Settlement.h"
-using std::string;
-using std::vector;
+using namespace std;
 
 class BaseAction;
 class SelectionPolicy;

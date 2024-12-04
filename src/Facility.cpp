@@ -1,4 +1,5 @@
 #include <Facility.h>
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -32,7 +33,6 @@ FacilityCategory FacilityType::getCategory() const
 {
     return FacilityType::category;
 }
-
 
 // Facility
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price,
@@ -68,7 +68,7 @@ const FacilityStatus &Facility::getStatus() const
 }
 const string Facility::toString() const
 {
-    std::stringstream ss;
+    stringstream ss;
     ss << "facility ";
     ss << name << " ";
     ss << static_cast<int>(category) << " ";

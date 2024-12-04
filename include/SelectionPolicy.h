@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "Facility.h"
-using std::vector;
+using namespace std;
 
 class SelectionPolicy
 {
@@ -11,7 +11,6 @@ public:
     virtual const string toString() const = 0;
     virtual SelectionPolicy *clone() const = 0;
     virtual ~SelectionPolicy() = default;
-    virtual const string toString() const;
 };
 
 class NaiveSelection : public SelectionPolicy
@@ -36,7 +35,6 @@ public:
     const string toString() const override;
     BalancedSelection *clone() const override;
     ~BalancedSelection() override = default;
-    const string toString() const;
 
 private:
     int LifeQualityScore;
@@ -55,7 +53,6 @@ public:
     const string toString() const override;
     EconomySelection *clone() const override;
     ~EconomySelection() override = default;
-    const string toString() const;
 
 private:
     int lastSelectedIndex;
@@ -69,7 +66,6 @@ public:
     const string toString() const override;
     SustainabilitySelection *clone() const override;
     ~SustainabilitySelection() override = default;
-    const string toString() const;
 
 private:
     int lastSelectedIndex;
