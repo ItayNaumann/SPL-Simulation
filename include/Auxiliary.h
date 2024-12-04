@@ -1,13 +1,15 @@
 #pragma once
+#include "Action.h"
 #include <iostream>
-#include <vector>
 #include <sstream>
 #include <string>
-#include "Action.h"
+#include <vector>
+using namespace std;
 
 class Auxiliary
 {
 public:
-    static std::vector<std::string> parseArguments(const std::string &line);
-    static BaseAction parseToAction(std::vector<std::string> &parsedArguments);
+    static vector<string> parseArguments(const string &line);
+    static BaseAction *parseToAction(vector<string> &parsedArguments);
+    static void initialParsing(const string &configFilePath, Simulation &simulation);
 };
