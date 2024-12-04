@@ -28,18 +28,13 @@ Plan::Plan(const Plan &other)
 
 void Plan::addFacility(Facility *facility)
 {
-    underConstruction.erase(facility);
-    facilities.push_back(facility);
-    life_quality_score += facility->getLifeQualityScore();
-    economy_score += facility->getEconomyScore();
-    environment_score += facility->getEnvironmentScore();
 }
 
 void Plan::step()
 {
     // technically we can do it every time but it's less efficient? idk we won't use PlanStatus otherwise
 
-    if (status != PlanStatus::BUSY)
+    if (this->status != PlanStatus::BUSY)
     {
         while (underConstruction.size() < settlement.getConstructionLimit())
         {
@@ -52,7 +47,11 @@ void Plan::step()
         FacilityStatus facilityStatus = facility->step();
         if (facilityStatus == FacilityStatus::OPERATIONAL)
         {
-            this->addFacility(facility);
+            underConstruction.erase(facility);
+            facilities.push_back(facility);
+            life_quality_score += facility->getLifeQualityScore();
+            economy_score += facility->getEconomyScore();
+            environment_score += facility->getEnvironmentScore();
         }
     }
     status = underConstruction.size() == settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVALIABLE;
@@ -78,9 +77,6 @@ Plan::~Plan()
     }
     delete &underConstruction;
 
-    delete &facilityOptions;
-    delete &settlement;
-    delete &selectionPolicy;
+    delete selectionPolicy;
     delete &status;
-    ;
 }
