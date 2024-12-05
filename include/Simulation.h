@@ -25,6 +25,9 @@ class Simulation {
         void close();
         void open();
 
+        // Auxiliary
+        bool isPlanExists(int planId);
+
     private:
         bool isRunning;
         int planCounter; //For assigning unique plan IDs
