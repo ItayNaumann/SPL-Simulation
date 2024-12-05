@@ -1,8 +1,8 @@
 #pragma once
-#include <vector>
 #include "Facility.h"
 #include "Settlement.h"
 #include "SelectionPolicy.h"
+#include <vector>
 using namespace std;
 
 enum class PlanStatus
@@ -31,10 +31,12 @@ public:
     vector<Facility *> &getUnderConstruction();
     SelectionPolicy *getSelectionPolicy();
     const vector<FacilityType> &getFacilityOptions() const;
+    const int getPlanId() const;
 
     // rule of 5
-    Plan(const Plan &other);
+    Plan(const Plan &other, const vector<FacilityType> &facilityOptions);
     ~Plan();
+    Plan &operator=(const Plan &other) = delete;
 
 private:
     int plan_id;

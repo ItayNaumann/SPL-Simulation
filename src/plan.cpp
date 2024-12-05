@@ -11,8 +11,10 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     facilities = new vector<Facility *>();
     underConstruction = new vector<Facility *>();
 }
-Plan::Plan(const Plan &other)
-    : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy), facilityOptions(other.facilityOptions), status(other.status), life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score)
+Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions)
+    : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy),
+      facilityOptions(facilityOptions), status(other.status), life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score), environment_score(other.environment_score)
 {
     facilities = new vector<Facility *>();
     underConstruction = new vector<Facility *>();
@@ -26,22 +28,42 @@ Plan::Plan(const Plan &other)
     }
 }
 
-void Plan::addFacility(Facility *facility)
+const int Plan::getlifeQualityScore() const
 {
+    return life_quality_score;
+}
+
+const int Plan::getEconomyScore() const
+{
+    return economy_score;
+}
+
+const int Plan::getEnvironmentScore() const
+{
+    return environment_score;
+}
+
+void Plan::setSelectionPolicy(SelectionPolicy *newSelectionPolicy)
+{
+    delete this->selectionPolicy;
+    this->selectionPolicy = newSelectionPolicy;
+}
+
+const int Plan::getPlanId() const
+{
+    return plan_id;
 }
 
 void Plan::step()
 {
     // technically we can do it every time but it's less efficient? idk we won't use PlanStatus otherwise
 
-    if (this->status != PlanStatus::BUSY)
+    while (underConstruction.size() < settlement.getConstructionLimit())
     {
-        while (underConstruction.size() < settlement.getConstructionLimit())
-        {
-            FacilityType facilityType = selectionPolicy->selectFacility(facilityOptions);
-            underConstruction.push_back(new Facility(facilityType, settlement.getName()));
-        }
+        FacilityType facilityType = selectionPolicy->selectFacility(facilityOptions);
+        underConstruction.push_back(new Facility(facilityType, settlement.getName()));
     }
+
     for (Facility *facility : facilities)
     {
         FacilityStatus facilityStatus = facility->step();
