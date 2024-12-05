@@ -71,7 +71,7 @@ const string Facility::toString() const
     stringstream ss;
     ss << "facility ";
     ss << name << " ";
-    ss << static_cast<int>(category) << " ";
+    ss << (int)(category) << " ";
     ss << price << " ";
     ss << lifeQuality_score << " ";
     ss << economy_score << " ";

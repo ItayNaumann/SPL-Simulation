@@ -23,6 +23,6 @@ const string Settlement::toString() const
 
 const int Settlement::getConstructionLimit() const
 {
-    return static_cast<int>(type) + 1;
+    return (int)(type) + 1;
     // I think this works.
 }
