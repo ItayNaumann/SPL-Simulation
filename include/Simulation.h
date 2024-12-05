@@ -25,14 +25,19 @@ public:
     void close();
     void open();
 
-        // Auxiliary
-        bool isPlanExists(int planId);
+    // Auxiliary
+    bool isPlanExists(int planId);
 
-    private:
-        bool isRunning;
-        int planCounter; //For assigning unique plan IDs
-        vector<BaseAction*> actionsLog;
-        vector<Plan> plans;
-        vector<Settlement> settlements;
-        vector<FacilityType> facilitiesOptions;
+    // Rule of 5
+    ~Simulation();
+    Simulation(const Simulation &other);
+    Simulation &operator=(const Simulation &other);
+
+private:
+    bool isRunning;
+    int planCounter; // For assigning unique plan IDs
+    vector<BaseAction *> actionsLog;
+    vector<Plan> plans;
+    vector<Settlement> settlements;
+    vector<FacilityType> facilitiesOptions;
 };
