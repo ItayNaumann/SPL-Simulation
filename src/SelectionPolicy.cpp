@@ -86,19 +86,14 @@ int abs(int num)
 EconomySelection::EconomySelection() : lastSelectedIndex(-1) {}
 const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    int maxEco = 0;
-    int maxIndex = 0;
-    for (int i = 0; i < facilitiesOptions.size(); i++)
+    for (int i = (lastSelectedIndex + 1); i < facilitiesOptions.size(); (i + 1) % facilitiesOptions.size())
     {
-        if (facilitiesOptions[i].getEconomyScore() > maxEco)
+        if (facilitiesOptions[i].getCategory() == FacilityCategory::ECONOMY)
         {
-            maxEco = facilitiesOptions[i].getEconomyScore();
-            maxIndex = i;
+            lastSelectedIndex = i;
+            return facilitiesOptions[i];
         }
     }
-    lastSelectedIndex = maxIndex;
-    const FacilityType &output = facilitiesOptions[maxIndex];
-    return output;
 }
 
 const string EconomySelection::toString() const
@@ -120,19 +115,14 @@ SustainabilitySelection::SustainabilitySelection()
 }
 const FacilityType &SustainabilitySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    int maxEnv = 0;
-    int maxIndex = 0;
-    for (int i = 0; i < facilitiesOptions.size(); i++)
+    for (int i = (lastSelectedIndex + 1); i < facilitiesOptions.size(); (i + 1) % facilitiesOptions.size())
     {
-        if (facilitiesOptions[i].getEnvironmentScore() > maxEnv)
+        if (facilitiesOptions[i].getCategory() == FacilityCategory::ENVIRONMENT)
         {
-            maxEnv = facilitiesOptions[i].getEnvironmentScore();
-            maxIndex = i;
+            lastSelectedIndex = i;
+            return facilitiesOptions[i];
         }
     }
-    lastSelectedIndex = maxIndex;
-    const FacilityType &output = facilitiesOptions[maxIndex];
-    return output;
 }
 
 const string SustainabilitySelection::toString() const
