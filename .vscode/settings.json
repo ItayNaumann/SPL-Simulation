@@ -59,7 +59,10 @@
         "typeinfo": "cpp",
         "unordered_map": "cpp",
         "variant": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "format": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     },
     "terminal.integrated.inheritEnv": false,
 }

@@ -4,26 +4,26 @@
 #include "Facility.h"
 #include "Plan.h"
 #include "Settlement.h"
-using std::string;
-using std::vector;
+using namespace std;
 
 class BaseAction;
 class SelectionPolicy;
 
-class Simulation {
-    public:
-        Simulation(const string &configFilePath);
-        void start();
-        void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
-        void addAction(BaseAction *action);
-        bool addSettlement(Settlement settlement);
-        bool addFacility(FacilityType facility);
-        bool isSettlementExists(const string &settlementName);
-        Settlement &getSettlement(const string &settlementName);
-        Plan &getPlan(const int planID);
-        void step();
-        void close();
-        void open();
+class Simulation
+{
+public:
+    Simulation(const string &configFilePath);
+    void start();
+    void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
+    void addAction(BaseAction *action);
+    bool addSettlement(Settlement *settlement);
+    bool addFacility(FacilityType facility);
+    bool isSettlementExists(const string &settlementName);
+    Settlement &getSettlement(const string &settlementName);
+    Plan &getPlan(const int planID);
+    void step();
+    void close();
+    void open();
 
         // Auxiliary
         bool isPlanExists(int planId);
