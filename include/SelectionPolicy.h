@@ -1,7 +1,7 @@
 #pragma once
+#include "Facility.h"
 #include <vector>
 #include <string>
-#include "Facility.h"
 using namespace std;
 
 class SelectionPolicy

@@ -1,8 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-using std::string;
-using std::vector;
+using namespace std;
 
 enum class FacilityStatus
 {
@@ -33,8 +32,6 @@ class FacilityType {
         FacilityCategory getCategory() const;
         // ADDED
         FacilityType(const FacilityType& other);
-
-    
 
 protected:
     const string name;
