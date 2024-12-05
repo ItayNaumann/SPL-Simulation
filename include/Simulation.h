@@ -27,6 +27,7 @@ public:
 
     // Auxiliary
     bool isPlanExists(int planId);
+    const vector<BaseAction *> getActionsLog() const;
 
     // Rule of 5
     ~Simulation();

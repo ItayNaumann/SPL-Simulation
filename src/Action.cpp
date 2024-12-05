@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+extern Simulation *backup = nullptr;
+
 
 // BaseAction
 BaseAction::BaseAction(): errorMsg(""), status(ActionStatus::ERROR){}
@@ -21,26 +23,18 @@ const string &BaseAction::getErrorMsg() const{
 }
 
 // SimulateStep
-SimulateStep::SimulateStep(const int numOfSteps) : numOfSteps(numOfSteps), BaseAction()
-{
-}
+SimulateStep::SimulateStep(const int numOfSteps) : numOfSteps(numOfSteps), BaseAction(){}
 
 void SimulateStep::act(Simulation &simulation)
 {
-    // for (int i = 0; i < numOfSteps; i++)
-    // {
-    //     for (Plan &plan : simulation.getPlans())
-    //     {
-    //         plan.step();
-    //     }
-    // }
     for (int i = 0; i < numOfSteps; i++){
         simulation.step();
     }
 }
 const string SimulateStep::toString() const
 {
-    // Do stuff
+    const string output = "step " + std::to_string(numOfSteps) + " " + statusToString(getStatus());
+    return output;
 }
 SimulateStep *SimulateStep::clone() const
 {
@@ -62,7 +56,8 @@ void AddPlan::act(Simulation &simulation){
     }
 }
 const string AddPlan::toString() const{
-
+    const string output = "plan " + settlementName + " " + selectionPolicy + " " + statusToString(getStatus());
+    return output;
 }
 AddPlan *AddPlan::clone() const{
     AddPlan *clone = new AddPlan(settlementName, selectionPolicy);
@@ -77,7 +72,7 @@ void AddSettlement::act(Simulation &simulation){
         error("Settlement already exists");
     }
     else{
-        simulation.addSettlement(*settlement);
+        simulation.addSettlement(settlement);
         complete();
     }
 }
@@ -86,7 +81,8 @@ AddSettlement *AddSettlement::clone() const{
     return clone;
 }
 const string AddSettlement::toString() const{
-
+    const string output = "settlement " + settlementName + " " + std::to_string(static_cast<int>(settlementType)) + " " + statusToString(getStatus());
+    return output;
 }
 
 // AddFacility
@@ -106,7 +102,10 @@ AddFacility *AddFacility::clone() const{
     return clone;
 }
 const string AddFacility::toString() const{
-    
+    const string output = "facility " + facilityName + " " +  std::to_string(static_cast<int>(facilityCategory)) + " " + 
+        std::to_string(price) + " " + std::to_string(lifeQualityScore) + " " 
+            + std::to_string(economyScore) + " " + std::to_string(environmentScore) + " " + statusToString(getStatus());
+    return output;
 }
 
 // PrintPlanStatus
@@ -128,7 +127,8 @@ PrintPlanStatus *PrintPlanStatus::clone() const{
     return clone;
 }
 const string PrintPlanStatus::toString() const{
-    
+    const string output = "planStatus " + std::to_string(planId) + " " + statusToString(getStatus());
+    return output;
 }
 
 // ChangePlanPolicy
@@ -150,10 +150,77 @@ ChangePlanPolicy *ChangePlanPolicy::clone() const{
     return clone;
 }
 const string ChangePlanPolicy::toString() const{
-
+    const string output = "changePolicy " + std::to_string(planId) + " " + newPolicy + " " + statusToString(getStatus());
+    return output;
 }
 
 // PrintActionsLog
+PrintActionsLog::PrintActionsLog() : BaseAction(){}
+void PrintActionsLog::act(Simulation &simulation){
+    const vector<BaseAction *> &actions = simulation.getActionsLog();
+    for (BaseAction * action : actions){
+        cout << action->toString() << endl;
+    }
+    complete();
+}
+PrintActionsLog *PrintActionsLog::clone() const{
+    PrintActionsLog *clone = new PrintActionsLog();
+    return clone;
+}
+const string PrintActionsLog::toString() const{
+    const string output = "log " + statusToString(getStatus());
+    return output;
+}
+
+// Close
+Close::Close(): BaseAction(){}
+void Close::act(Simulation &simulation){
+    simulation.close();
+    complete();
+}
+Close *Close::clone() const{
+    Close *clone = new Close();
+    return clone;
+}
+const string Close::toString() const{
+    const string output = "close " + statusToString(getStatus());
+    return output;
+}
+
+// BackupSimulation
+BackupSimulation::BackupSimulation() : BaseAction(){}
+void BackupSimulation::act(Simulation &simulation) {
+    backup = &simulation;
+    complete();
+}
+BackupSimulation *BackupSimulation::clone() const{
+    BackupSimulation *clone = new BackupSimulation();
+    return clone;
+}
+const string BackupSimulation::toString() const{
+    const string output = "backup " + statusToString(getStatus());
+    return output;
+}
+
+// RestoreSimulation
+RestoreSimulation::RestoreSimulation() : BaseAction(){}
+void RestoreSimulation::act(Simulation &simulation){
+    if (backup = nullptr){
+        error("No backup available");
+    }
+    else{
+        simulation = *backup;
+        complete();
+    }
+}
+RestoreSimulation *RestoreSimulation::clone() const{
+    RestoreSimulation *clone = new RestoreSimulation();
+    return clone;
+}
+const string RestoreSimulation::toString() const{
+    const string output = "restore " + statusToString(getStatus());
+    return output;
+}
 
 // Encode a string to a SelectionPolicy.
 SelectionPolicy *encodePolicy(string selectionPolicy){
@@ -171,4 +238,17 @@ SelectionPolicy *encodePolicy(string selectionPolicy){
         encoded = new SustainabilitySelection();
     }
     return encoded;
+}
+
+// Converts ActionStatus to proper string representation
+string statusToString(const ActionStatus &status){
+    if (status == ActionStatus::COMPLETED){
+        return "COMPLETED";
+    }
+    else if (status == ActionStatus::ERROR){
+        return "ERROR";
+    }
+    else{
+        return "";
+    }
 }
