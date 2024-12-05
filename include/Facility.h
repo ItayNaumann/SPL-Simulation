@@ -15,6 +15,10 @@ enum class FacilityCategory {
     ENVIRONMENT,
 };
 
+// Additional toString() for enums
+
+//
+
 
 class FacilityType {
     public:
@@ -25,6 +29,8 @@ class FacilityType {
         int getEnvironmentScore() const;
         int getEconomyScore() const;
         FacilityCategory getCategory() const;
+        // ADDED
+        FacilityType(const FacilityType& other);
 
     protected:
         const string name;
