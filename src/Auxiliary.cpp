@@ -40,31 +40,31 @@ void Auxiliary::initialParsing(const string &configFilePath, Simulation &simulat
         {
             arguments = Auxiliary::parseArguments(line);
 
-            if (arguments[0] == "settlement")
+            if (arguments.at(0) == "settlement")
             {
-                int type = stoi(arguments[2]);
-                Settlement *settlement = new Settlement(arguments[1], SettlementType(type));
+                int type = stoi(arguments.at(2));
+                Settlement *settlement = new Settlement(arguments.at(1), SettlementType(type));
                 simulation.addSettlement(settlement);
             }
-            else if (arguments[0] == "facility")
+            else if (arguments.at(0) == "facility")
             {
-                int type = stoi(arguments[2]);
-                FacilityType facility(arguments[1], FacilityCategory(type), stoi(arguments[3]), stoi(arguments[4]), stoi(arguments[5]), stoi(arguments[6]));
+                int type = stoi(arguments.at(2));
+                FacilityType facility(arguments.at(1), FacilityCategory(type), stoi(arguments.at(3)), stoi(arguments.at(4)), stoi(arguments.at(5)), stoi(arguments.at(6)));
                 simulation.addFacility(facility);
             }
-            else if (arguments[0] == "plan")
+            else if (arguments.at(0) == "plan")
             {
-                Settlement &settlement = simulation.getSettlement(arguments[1]);
+                Settlement &settlement = simulation.getSettlement(arguments.at(1));
                 SelectionPolicy *selectionPolicy = nullptr;
-                if (arguments[2] == "nve")
+                if (arguments.at(2) == "nve")
                 {
                     selectionPolicy = new NaiveSelection();
                 }
-                else if (arguments[2] == "bal")
+                else if (arguments.at(2) == "bal")
                 {
                     selectionPolicy = new BalancedSelection(0, 0, 0);
                 }
-                else if (arguments[2] == "eco")
+                else if (arguments.at(2) == "eco")
                 {
                     selectionPolicy = new EconomySelection();
                 }
@@ -72,49 +72,61 @@ void Auxiliary::initialParsing(const string &configFilePath, Simulation &simulat
             }
         }
     }
+    file.close();
 }
 
 BaseAction *Auxiliary::parseToAction(vector<string> &parsedArguments)
 {
-    string action = parsedArguments[0];
-    if (action == "step")
+    try
     {
-        return new SimulateStep(stoi(parsedArguments[1]));
+        string action = parsedArguments[0];
+        if (action == "step")
+        {
+            return new SimulateStep(stoi(parsedArguments.at(1)));
+        }
+        else if (action == "plan")
+        {
+            return new AddPlan(parsedArguments.at(1), parsedArguments.at(2));
+        }
+        else if (action == "settlement")
+        {
+            return new AddSettlement(parsedArguments.at(1), SettlementType(stoi(parsedArguments.at(2))));
+        }
+        else if (action == "facility")
+        {
+            return new AddFacility(parsedArguments.at(1), FacilityCategory(stoi(parsedArguments.at(2))), stoi(parsedArguments.at(3)), stoi(parsedArguments.at(4)), stoi(parsedArguments.at(5)), stoi(parsedArguments.at(6)));
+        }
+        else if (action == "planStatus")
+        {
+            return new PrintPlanStatus(stoi(parsedArguments.at(1)));
+        }
+        else if (action == "changePolicy")
+        {
+            return new ChangePlanPolicy(stoi(parsedArguments.at(1)), parsedArguments.at(2));
+        }
+        else if (action == "log")
+        {
+            return new PrintActionsLog();
+        }
+        else if (action == "close")
+        {
+            return new Close();
+        }
+        else if (action == "backup")
+        {
+            return new BackupSimulation();
+        }
+        else if (action == "restore")
+        {
+            return new RestoreSimulation();
+        }
+        else
+        {
+            std::cout << "Invalid action " << action << std::endl;
+        }
     }
-    else if (action == "plan")
+    catch (const runtime_error &e)
     {
-        return new AddPlan(parsedArguments[1], parsedArguments[2]);
-    }
-    else if (action == "settlement")
-    {
-        return new AddSettlement(parsedArguments[1], SettlementType(stoi(parsedArguments[2])));
-    }
-    else if (action == "facility")
-    {
-        return new AddFacility(parsedArguments[1], FacilityCategory(stoi(parsedArguments[2])), stoi(parsedArguments[3]), stoi(parsedArguments[4]), stoi(parsedArguments[5]), stoi(parsedArguments[6]));
-    }
-    else if (action == "planStatus")
-    {
-        return new PrintPlanStatus(stoi(parsedArguments[1]));
-    }
-    else if (action == "changePolicy")
-    {
-        return new ChangePlanPolicy(stoi(parsedArguments[1]), parsedArguments[2]);
-    }
-    else if (action == "log")
-    {
-        return new PrintActionsLog();
-    }
-    else if (action == "close")
-    {
-        return new Close();
-    }
-    else if (action == "backup")
-    {
-        return new BackupSimulation();
-    }
-    else if (action == "restore")
-    {
-        return new RestoreSimulation();
+        std::cout << "Invalid action" << std::endl;
     }
 }
