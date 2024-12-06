@@ -93,24 +93,28 @@ SelectionPolicy *Plan::getSelectionPolicy()
 
 void Plan::step()
 {
-    // technically we can do it every time but it's less efficient? idk we won't use PlanStatus otherwise
 
-    while (underConstruction.size() < settlement.getConstructionLimit())
+    for (int i = underConstruction.size(); i < settlement.getConstructionLimit(); i++)
     {
         FacilityType facilityType = selectionPolicy->selectFacility(facilityOptions);
         underConstruction.push_back(new Facility(facilityType, settlement.getName()));
     }
 
-    for (Facility *facility : underConstruction)
+    for (auto facility = underConstruction.begin(); facility != underConstruction.end();)
     {
-        FacilityStatus facilityStatus = facility->step();
+        FacilityStatus facilityStatus = (*facility)->step();
         if (facilityStatus == FacilityStatus::OPERATIONAL)
         {
+
+            facilities.push_back(*facility);
             underConstruction.erase(facility);
-            facilities.push_back(facility);
-            life_quality_score += facility->getLifeQualityScore();
-            economy_score += facility->getEconomyScore();
-            environment_score += facility->getEnvironmentScore();
+            life_quality_score += (*facility)->getLifeQualityScore();
+            economy_score += (*facility)->getEconomyScore();
+            environment_score += (*facility)->getEnvironmentScore();
+        }
+        else
+        {
+            facility++;
         }
     }
     status = underConstruction.size() == settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVALIABLE;

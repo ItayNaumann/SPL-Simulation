@@ -96,7 +96,7 @@ AddSettlement *AddSettlement::clone() const
 }
 const string AddSettlement::toString() const
 {
-    const string output = "settlement " + settlementName + " " + std::to_string(()(settlementType)) + " " + statusToString();
+    const string output = "settlement " + settlementName + " " + std::to_string((int)(settlementType)) + " " + statusToString();
     return output;
 }
 
@@ -122,7 +122,7 @@ AddFacility *AddFacility::clone() const
 }
 const string AddFacility::toString() const
 {
-    const string output = "facility " + facilityName + " " + std::to_string(()(facilityCategory)) + " " +
+    const string output = "facility " + facilityName + " " + std::to_string((int)(facilityCategory)) + " " +
                           std::to_string(price) + " " + std::to_string(lifeQualityScore) + " " + std::to_string(economyScore) + " " + std::to_string(environmentScore) + " " + statusToString();
     return output;
 }
