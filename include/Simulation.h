@@ -33,6 +33,8 @@ public:
     ~Simulation();
     Simulation(const Simulation &other);
     Simulation &operator=(const Simulation &other);
+    Simulation(Simulation &&other);
+    Simulation &operator=(Simulation &&other);
 
 private:
     bool isRunning;

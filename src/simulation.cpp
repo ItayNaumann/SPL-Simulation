@@ -215,3 +215,27 @@ Simulation::Simulation(const Simulation &other)
         settlements.push_back(new Settlement(*settlement));
     }
 }
+
+Simulation::Simulation(Simulation&& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(std::move(other.actionsLog)), 
+    plans(std::move(other.plans)), settlements(std::move(other.settlements)), facilitiesOptions(std::move(other.facilitiesOptions)){
+    // Move pointers to null
+    for (BaseAction *ba : other.actionsLog){
+        ba = nullptr;
+    }
+}
+
+Simulation &Simulation::operator=(Simulation&& other){
+    if (this != &other){
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+        actionsLog = std::move(actionsLog);
+        plans = std::move(other.plans);
+        settlements = std::move(other.settlements);
+        facilitiesOptions = std::move(other.facilitiesOptions);
+
+        // Move pointers to null
+        for (BaseAction *ba : other.actionsLog){
+            ba = nullptr;
+        }
+    }
+}
