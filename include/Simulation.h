@@ -41,6 +41,6 @@ private:
     int planCounter; // For assigning unique plan IDs
     vector<BaseAction *> actionsLog;
     vector<Plan> plans;
-    vector<Settlement> settlements;
+    vector<Settlement *> settlements;
     vector<FacilityType> facilitiesOptions;
 };

@@ -21,7 +21,6 @@ public:
     const string toString() const override;
     NaiveSelection *clone() const override;
     ~NaiveSelection() override = default;
-    const string toString() const;
 
 private:
     int lastSelectedIndex;
@@ -42,7 +41,7 @@ private:
     int EnvironmentScore;
 
     // Auxiliary methods
-    int BalancedSelection::distance(const FacilityType &Facility);
+    int distance(const FacilityType &Facility);
 };
 
 class EconomySelection : public SelectionPolicy
@@ -69,4 +68,10 @@ public:
 
 private:
     int lastSelectedIndex;
+};
+
+class SelectionPolicyFactory
+{
+public:
+    static SelectionPolicy *createPolicy(const string &selectionPolicy, int LifeQualityScore, int EconomyScore, int EnvironmentScore);
 };
