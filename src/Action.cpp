@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-extern Simulation *backup = nullptr;
+extern Simulation *backup;
 
 // BaseAction
 BaseAction::BaseAction() : errorMsg(""), status(ActionStatus::ERROR) {}
@@ -104,14 +104,14 @@ const string AddSettlement::toString() const
 AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore) : BaseAction(), facilityName(facilityName), facilityCategory(facilityCategory), price(price), lifeQualityScore(lifeQualityScore), economyScore(economyScore), environmentScore(environmentScore) {}
 void AddFacility::act(Simulation &simulation)
 {
-    FacilityType *facility = new FacilityType(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore);
-    if (!simulation.addFacility(*facility))
+    FacilityType facility = FacilityType(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore);
+    if (!simulation.addFacility(facility))
     {
         error("Facility already exists");
     }
     else
     {
-        simulation.addFacility(*facility);
+        simulation.addFacility(facility);
         complete();
     }
 }
