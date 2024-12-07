@@ -3,21 +3,14 @@
 #include <algorithm>
 
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions)
-    : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE)
-{
-    life_quality_score = 0;
-    economy_score = 0;
-    environment_score = 0;
-    facilities = new vector<Facility *>();
-    underConstruction = new vector<Facility *>();
-}
+    : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), facilities(), 
+        underConstruction(), life_quality_score(0), economy_score(0), environment_score(0){}
+        
 Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions)
     : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy),
       facilityOptions(facilityOptions), status(other.status), life_quality_score(other.life_quality_score),
-      economy_score(other.economy_score), environment_score(other.environment_score)
+      economy_score(other.economy_score), environment_score(other.environment_score), facilities(), underConstruction()
 {
-    facilities = new vector<Facility *>();
-    underConstruction = new vector<Facility *>();
     for (Facility *facility : other.facilities)
     {
         facilities.push_back(new Facility(*facility));
@@ -69,7 +62,7 @@ void Plan::step()
         FacilityStatus facilityStatus = facility->step();
         if (facilityStatus == FacilityStatus::OPERATIONAL)
         {
-            underConstruction.erase(facility);
+            underConstruction.erase(std::find(facilities.begin(),facilities.end(), *facility));
             facilities.push_back(facility);
             life_quality_score += facility->getLifeQualityScore();
             economy_score += facility->getEconomyScore();

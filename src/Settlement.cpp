@@ -1,10 +1,7 @@
 #include <Settlement.h>
 #include <string>
 
-Settlement::Settlement(const string &name, SettlementType type) : name(name), type(type)
-{
-    // might work
-}
+Settlement::Settlement(const string &name, SettlementType type) : name(name), type(type){}
 
 const string &Settlement::getName() const
 {
@@ -18,11 +15,11 @@ SettlementType Settlement::getType() const
 
 const string Settlement::toString() const
 {
-    // order unknown, may need to add toString for SettlementType.
+    const string output = name + std::to_string(static_cast<int>(type));
+    return output;
 }
 
 const int Settlement::getConstructionLimit() const
 {
-    return (int)(type) + 1;
-    // I think this works.
+    return static_cast<int>(type) + 1;
 }
