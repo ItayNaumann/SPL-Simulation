@@ -32,7 +32,7 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
     int minDist = distance(facilitiesOptions[0]);
     int minIndex = 0;
     // Find minIndex
-    for (int i = 1; i < facilitiesOptions.size(); i++)
+    for (int i = 1; i < (int)facilitiesOptions.size(); i++)
     {
         if (distance(facilitiesOptions[i]) < minDist)
         {
@@ -86,7 +86,7 @@ int abs(int num)
 EconomySelection::EconomySelection() : lastSelectedIndex(-1) {}
 const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    for (int i = (lastSelectedIndex + 1); i < facilitiesOptions.size(); (i + 1) % facilitiesOptions.size())
+    for (int i = (lastSelectedIndex + 1); i < (int)facilitiesOptions.size(); i = (i + 1) % ((int)facilitiesOptions.size()))
     {
         if (facilitiesOptions[i].getCategory() == FacilityCategory::ECONOMY)
         {
@@ -94,6 +94,7 @@ const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> 
             return facilitiesOptions[i];
         }
     }
+    throw "No economy facilities found";
 }
 
 const string EconomySelection::toString() const
@@ -109,13 +110,12 @@ EconomySelection *EconomySelection::clone() const
 }
 
 // Sustainability
-SustainabilitySelection::SustainabilitySelection()
+SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(-1)
 {
-    lastSelectedIndex = -1;
 }
 const FacilityType &SustainabilitySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    for (int i = (lastSelectedIndex + 1); i < facilitiesOptions.size(); (i + 1) % facilitiesOptions.size())
+    for (int i = (lastSelectedIndex + 1); i < (int)facilitiesOptions.size(); i = (i + 1) % ((int)facilitiesOptions.size()))
     {
         if (facilitiesOptions[i].getCategory() == FacilityCategory::ENVIRONMENT)
         {
@@ -123,6 +123,7 @@ const FacilityType &SustainabilitySelection::selectFacility(const vector<Facilit
             return facilitiesOptions[i];
         }
     }
+    throw "No environment facilities found";
 }
 
 const string SustainabilitySelection::toString() const
