@@ -1,7 +1,7 @@
 #include <Settlement.h>
 #include <string>
 
-Settlement::Settlement(const string &name, SettlementType type) : name(name), type(type){}
+Settlement::Settlement(const string &name, SettlementType type) : name(name), type(type) {}
 
 const string &Settlement::getName() const
 {
