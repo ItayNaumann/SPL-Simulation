@@ -1,7 +1,7 @@
 all: clean compile link
 
 link:
-	g++ -o main bin/*.o
+	g++ -o simulation bin/main.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settlement.o bin/Simulation.o
 
 compile: main Action Auxiliary Facility Plan SelectionPolicy Settlement Simulation
 
@@ -29,10 +29,8 @@ Settlement:
 Simulation:
 	g++ -g -Weffc++ -Wall -std=c++11 -Iinclude -c -o bin/Simulation.o src/Simulation.cpp
 
-
 clean:
-	rm -f bin/*.o main
+	rm -f bin/*.o simulation
 
-
-valgrind:
-	valgrind --leak-check=full --show-reachable=yes main config_file.txt
+valgrind: clean compile link
+	valgrind --leak-check=full --show-reachable=yes ./simulation config_file.txt
