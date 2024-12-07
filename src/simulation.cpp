@@ -1,15 +1,58 @@
 #include "Simulation.h"
 #include "Auxiliary.h"
-
+#include <iostream>
 #include <vector>
 #include <string>
-#include <iostream>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
-Simulation::Simulation(const string &configFilePath)
+Simulation::Simulation(const string &configFilePath) : isRunning(false), planCounter(0), actionsLog(vector<BaseAction *>()), plans(vector<Plan>()), settlements(vector<Settlement *>()), facilitiesOptions(vector<FacilityType>())
 {
-    planCounter = 0;
-    Auxiliary::initialParsing(configFilePath, *this);
+    ifstream file(configFilePath);
+    string line;
+    vector<string> arguments;
+
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            arguments = Auxiliary::parseArguments(line);
+
+            if (arguments.at(0) == "settlement")
+            {
+                int type = stoi(arguments.at(2));
+                Settlement *settlement = new Settlement(arguments.at(1), SettlementType(type));
+                this->addSettlement(settlement);
+            }
+            else if (arguments.at(0) == "facility")
+            {
+                int type = stoi(arguments.at(2));
+                FacilityType facility(arguments.at(1), FacilityCategory(type), stoi(arguments.at(3)), stoi(arguments.at(4)), stoi(arguments.at(5)), stoi(arguments.at(6)));
+                this->addFacility(facility);
+            }
+            else if (arguments.at(0) == "plan")
+            {
+                Settlement &settlement = this->getSettlement(arguments.at(1));
+                SelectionPolicy *selectionPolicy = nullptr;
+                if (arguments.at(2) == "nve")
+                {
+                    selectionPolicy = new NaiveSelection();
+                }
+                else if (arguments.at(2) == "bal")
+                {
+                    selectionPolicy = new BalancedSelection(0, 0, 0);
+                }
+                else if (arguments.at(2) == "eco")
+                {
+                    selectionPolicy = new EconomySelection();
+                }
+                this->addPlan(settlement, selectionPolicy);
+            }
+        }
+    }
+    file.close();
+    isRunning = true;
 }
 
 void Simulation::start()
@@ -20,7 +63,60 @@ void Simulation::start()
         string line;
         getline(std::cin, line);
         vector<string> arguments = Auxiliary::parseArguments(line);
-        BaseAction *action = Auxiliary::parseToAction(arguments);
+        BaseAction *action;
+        try
+        {
+            string parsedAction = arguments.at(0);
+            if (parsedAction == "step")
+            {
+                action = new SimulateStep(stoi(arguments.at(1)));
+            }
+            else if (parsedAction == "plan")
+            {
+                action = new AddPlan(arguments.at(1), arguments.at(2));
+            }
+            else if (parsedAction == "settlement")
+            {
+                action = new AddSettlement(arguments.at(1), SettlementType(stoi(arguments.at(2))));
+            }
+            else if (parsedAction == "facility")
+            {
+                action = new AddFacility(arguments.at(1), FacilityCategory(stoi(arguments.at(2))), stoi(arguments.at(3)), stoi(arguments.at(4)), stoi(arguments.at(5)), stoi(arguments.at(6)));
+            }
+            else if (parsedAction == "planStatus")
+            {
+                action = new PrintPlanStatus(stoi(arguments.at(1)));
+            }
+            else if (parsedAction == "changePolicy")
+            {
+                action = new ChangePlanPolicy(stoi(arguments.at(1)), arguments.at(2));
+            }
+            else if (parsedAction == "log")
+            {
+                action = new PrintActionsLog();
+            }
+            else if (parsedAction == "close")
+            {
+                action = new Close();
+            }
+            else if (parsedAction == "backup")
+            {
+                action = new BackupSimulation();
+            }
+            else if (parsedAction == "restore")
+            {
+                action = new RestoreSimulation();
+            }
+            else
+            {
+                std::cout << "Invalid action " << action << std::endl;
+            }
+        }
+        catch (const runtime_error &e)
+        {
+            std::cout << "Invalid action" << std::endl;
+        }
+
         action->act(*this);
         actionsLog.push_back(action);
     }
@@ -85,6 +181,51 @@ Plan &Simulation::getPlan(const int planID)
             return plan;
         }
     }
+    throw "Plan not found";
+}
+
+Settlement &Simulation::getSettlement(const string &settlementName)
+{
+    for (Settlement *settlement : settlements)
+    {
+        if (settlement->getName() == settlementName)
+        {
+            return *settlement;
+        }
+    }
+    throw "Settlement not found";
+}
+
+void Simulation::close()
+{
+    isRunning = false;
+}
+
+void Simulation::open()
+{
+    isRunning = true;
+}
+
+const vector<BaseAction *> Simulation::getActionsLog() const
+{
+    return actionsLog;
+}
+
+void Simulation::addAction(BaseAction *action)
+{
+    actionsLog.push_back(action);
+}
+
+bool Simulation::isPlanExists(const int planId)
+{
+    for (Plan plan : plans)
+    {
+        if (plan.getPlanId() == planId)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 Simulation &Simulation::operator=(const Simulation &other)
@@ -167,48 +308,23 @@ Simulation::~Simulation()
     delete &settlements;
 }
 
-Simulation::Simulation(const Simulation &other)
+Simulation::Simulation(const Simulation &other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(vector<BaseAction *>()), plans(vector<Plan>()), settlements(vector<Settlement *>()), facilitiesOptions(vector<FacilityType>())
 {
-    isRunning = other.isRunning;
-    planCounter = other.planCounter;
-
-    for (FacilityType facility : facilitiesOptions)
-    {
-        delete &facility;
-    }
-    delete &facilitiesOptions;
-    facilitiesOptions = vector<FacilityType>();
     for (FacilityType facility : other.facilitiesOptions)
     {
         facilitiesOptions.push_back(FacilityType(facility));
     }
 
-    for (BaseAction *action : actionsLog)
-    {
-        delete action;
-    }
-    delete &actionsLog;
-    actionsLog = vector<BaseAction *>();
     for (BaseAction *action : other.actionsLog)
     {
         actionsLog.push_back(action->clone());
     }
 
-    for (Plan plan : plans)
-    {
-        delete &plan;
-    }
-    plans = vector<Plan>();
     for (Plan plan : other.plans)
     {
         plans.push_back(Plan(plan, this->facilitiesOptions));
     }
 
-    for (Settlement *settlement : settlements)
-    {
-        delete settlement;
-    }
-    delete &settlements;
     settlements = vector<Settlement *>();
     for (Settlement *settlement : other.settlements)
     {
@@ -216,16 +332,21 @@ Simulation::Simulation(const Simulation &other)
     }
 }
 
-Simulation::Simulation(Simulation&& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(std::move(other.actionsLog)), 
-    plans(std::move(other.plans)), settlements(std::move(other.settlements)), facilitiesOptions(std::move(other.facilitiesOptions)){
+Simulation::Simulation(Simulation &&other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(std::move(other.actionsLog)),
+                                             plans(std::move(other.plans)), settlements(std::move(other.settlements)), facilitiesOptions(std::move(other.facilitiesOptions))
+{
     // Move pointers to null
-    for (BaseAction *ba : other.actionsLog){
+    for (BaseAction *&ba : other.actionsLog)
+    {
         ba = nullptr;
     }
+    other.actionsLog.clear();
 }
 
-Simulation &Simulation::operator=(Simulation&& other){
-    if (this != &other){
+Simulation &Simulation::operator=(Simulation &&other)
+{
+    if (this != &other)
+    {
         isRunning = other.isRunning;
         planCounter = other.planCounter;
         actionsLog = std::move(actionsLog);
@@ -234,8 +355,12 @@ Simulation &Simulation::operator=(Simulation&& other){
         facilitiesOptions = std::move(other.facilitiesOptions);
 
         // Move pointers to null
-        for (BaseAction *ba : other.actionsLog){
+        for (BaseAction *&ba : other.actionsLog)
+        {
             ba = nullptr;
         }
+        other.actionsLog.clear();
     }
+
+    return *this;
 }

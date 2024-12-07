@@ -26,7 +26,7 @@ public:
     void open();
 
     // Auxiliary
-    bool isPlanExists(int planId);
+    bool isPlanExists(const int planId);
     const vector<BaseAction *> getActionsLog() const;
 
     // Rule of 5
