@@ -20,18 +20,19 @@ enum class FacilityCategory
 
 //
 
+class FacilityType
+{
+public:
+    FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score);
+    const string &getName() const;
+    int getCost() const;
+    int getLifeQualityScore() const;
+    int getEnvironmentScore() const;
+    int getEconomyScore() const;
+    FacilityCategory getCategory() const;
 
-class FacilityType {
-    public:
-        FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score);
-        const string &getName() const;
-        int getCost() const;
-        int getLifeQualityScore() const;
-        int getEnvironmentScore() const;
-        int getEconomyScore() const;
-        FacilityCategory getCategory() const;
-        // ADDED
-        FacilityType(const FacilityType& other);
+    FacilityType(const FacilityType &other);
+    virtual ~FacilityType() = default;
 
 protected:
     const string name;

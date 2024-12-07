@@ -6,7 +6,15 @@
 using namespace std;
 
 // FacilityType
-FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score) : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score)
+FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price,
+                           const int lifeQuality_score, const int economy_score, const int environment_score)
+    : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score),
+      economy_score(economy_score), environment_score(environment_score)
+{
+}
+FacilityType::FacilityType(const FacilityType &other)
+    : name(other.name), category(other.category), price(other.price), lifeQuality_score(other.lifeQuality_score),
+      economy_score(other.economy_score), environment_score(other.environment_score)
 {
 }
 const string &FacilityType::getName() const
@@ -37,11 +45,12 @@ FacilityCategory FacilityType::getCategory() const
 // Facility
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price,
                    const int lifeQuality_score, const int economy_score, const int environment_score)
-    : settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS),
-      FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score) { timeLeft = getCost(); }
+    : FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score),
+      settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS), timeLeft(price) {}
 
 Facility::Facility(const FacilityType &type, const string &settlementName)
-    : FacilityType(type), settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS) { timeLeft = getCost(); }
+    : FacilityType(type), settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS), timeLeft(price) {}
+
 const string &Facility::getSettlementName() const
 {
     return settlementName;
@@ -57,6 +66,7 @@ FacilityStatus Facility::step()
     {
         Facility::status = FacilityStatus::OPERATIONAL;
     }
+    return Facility::status;
 }
 void Facility::setStatus(FacilityStatus status)
 {
