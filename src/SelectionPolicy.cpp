@@ -135,3 +135,27 @@ SustainabilitySelection *SustainabilitySelection::clone() const
     output->lastSelectedIndex = lastSelectedIndex;
     return output;
 }
+
+SelectionPolicy *SelectionPolicyFactory::createPolicy(const string &selectionPolicy, int LifeQualityScore, int EconomyScore, int EnvironmentScore)
+{
+    if (selectionPolicy == "nve")
+    {
+        return new NaiveSelection();
+    }
+    else if (selectionPolicy == "bal")
+    {
+        return new BalancedSelection(LifeQualityScore, EconomyScore, EnvironmentScore);
+    }
+    else if (selectionPolicy == "eco")
+    {
+        return new EconomySelection();
+    }
+    else if (selectionPolicy == "env")
+    {
+        return new SustainabilitySelection();
+    }
+    else
+    {
+        return nullptr;
+    }
+}
