@@ -6,14 +6,9 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), facilities(), 
         underConstruction(), life_quality_score(0), economy_score(0), environment_score(0){}
 Plan::Plan(const Plan &other)
-    : plan_id(other.getPlanId()), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE)
+    : plan_id(other.getPlanId()), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), 
+        life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score), facilities(), underConstruction()
 {
-    life_quality_score = other.life_quality_score;
-    economy_score = other.economy_score;
-    environment_score = other.environment_score;
-
-    facilities = vector<Facility *>();
-    underConstruction = vector<Facility *>();
     for (Facility *facility : other.facilities)
     {
         facilities.push_back(new Facility(*facility));
