@@ -5,15 +5,6 @@
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions)
     : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), facilities(), 
         underConstruction(), life_quality_score(0), economy_score(0), environment_score(0){}
-        
-    : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE)
-{
-    life_quality_score = 0;
-    economy_score = 0;
-    environment_score = 0;
-    facilities = vector<Facility *>();
-    underConstruction = vector<Facility *>();
-}
 Plan::Plan(const Plan &other)
     : plan_id(other.getPlanId()), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE)
 {
