@@ -3,11 +3,13 @@
 #include <algorithm>
 
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions)
-    : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), facilities(), 
-        underConstruction(), life_quality_score(0), economy_score(0), environment_score(0){}
+    : plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), status(PlanStatus::AVAILABLE),
+      facilities(vector<Facility *>()), underConstruction(vector<Facility *>()), facilityOptions(facilityOptions),
+      life_quality_score(0), economy_score(0), environment_score(0) {}
 Plan::Plan(const Plan &other)
-    : plan_id(other.getPlanId()), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(facilityOptions), status(PlanStatus::AVALIABLE), 
-        life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score), facilities(), underConstruction()
+    : plan_id(other.getPlanId()), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()),
+      status(other.status), facilities(vector<Facility *>()), underConstruction(vector<Facility *>()), facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score), environment_score(other.environment_score)
 {
     for (Facility *facility : other.facilities)
     {
@@ -20,8 +22,8 @@ Plan::Plan(const Plan &other)
 }
 Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions)
     : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy),
-      facilityOptions(facilityOptions), status(other.status), life_quality_score(other.life_quality_score),
-      economy_score(other.economy_score), environment_score(other.environment_score), facilities(), underConstruction()
+      status(other.status), facilities(vector<Facility *>()), underConstruction(vector<Facility *>()), facilityOptions(facilityOptions),
+      life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score)
 {
     for (Facility *facility : other.facilities)
     {
@@ -31,6 +33,14 @@ Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions)
     {
         underConstruction.push_back(new Facility(*facility));
     }
+}
+
+Plan::Plan(const Plan &&other)
+    : plan_id(other.plan_id), settlement(std::move(other.settlement)), selectionPolicy(other.selectionPolicy),
+      status(other.status), facilities(std::move(other.facilities)), underConstruction(std::move(other.underConstruction)),
+      facilityOptions(std::move(other.facilityOptions)), life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score), environment_score(other.environment_score)
+{
 }
 
 const int Plan::getlifeQualityScore() const
@@ -104,7 +114,7 @@ void Plan::step()
             facility++;
         }
     }
-    status = underConstruction.size() == settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVALIABLE;
+    status = (int)underConstruction.size() == settlement.getConstructionLimit() ? PlanStatus::BUSY : PlanStatus::AVAILABLE;
 }
 
 const vector<Facility *> &Plan::getFacilities() const

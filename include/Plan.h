@@ -7,7 +7,7 @@ using namespace std;
 
 enum class PlanStatus
 {
-    AVALIABLE,
+    AVAILABLE,
     BUSY,
 };
 
