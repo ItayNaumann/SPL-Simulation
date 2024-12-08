@@ -234,7 +234,7 @@ const string Close::toString() const
 BackupSimulation::BackupSimulation() : BaseAction() {}
 void BackupSimulation::act(Simulation &simulation)
 {
-    backup = &simulation;
+    backup = new Simulation(simulation);
     complete();
 }
 BackupSimulation *BackupSimulation::clone() const

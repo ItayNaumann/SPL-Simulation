@@ -70,6 +70,13 @@ int BalancedSelection::distance(const FacilityType &facility)
     return dist;
 }
 
+void BalancedSelection::updateScores(int LifeQualityScore, int EconomyScore, int EnvironmentScore)
+{
+    this->LifeQualityScore += LifeQualityScore;
+    this->EconomyScore += EconomyScore;
+    this->EnvironmentScore += EnvironmentScore;
+}
+
 int abs(int num)
 {
     if (num < 0)

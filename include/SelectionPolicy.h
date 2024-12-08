@@ -34,6 +34,7 @@ public:
     const string toString() const override;
     BalancedSelection *clone() const override;
     ~BalancedSelection() override = default;
+    void updateScores(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
 
 private:
     int LifeQualityScore;

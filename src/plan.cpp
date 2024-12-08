@@ -117,6 +117,10 @@ void Plan::step()
     {
         FacilityType facilityType = selectionPolicy->selectFacility(facilityOptions);
         underConstruction.push_back(new Facility(facilityType, settlement.getName()));
+        if (selectionPolicy->toString() == "bal")
+        {
+            ((BalancedSelection *)selectionPolicy)->updateScores(facilityType.getLifeQualityScore(), facilityType.getEconomyScore(), facilityType.getEnvironmentScore());
+        }
     }
 
     for (auto facility = underConstruction.begin(); facility != underConstruction.end();)
