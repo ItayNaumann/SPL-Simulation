@@ -92,15 +92,15 @@ void Plan::printStatus()
     cout << "LifeQualityScore: " << life_quality_score << endl;
     cout << "EconomyScore: " << economy_score << endl;
     cout << "EnvironmentScore: " << environment_score << endl;
-    for (Facility *facility : underConstruction)
-    {
-        cout << "FacilityName: " << facility->getName() << endl;
-        cout << "FacilityStatus: UNDER_CONSTRUCTION" << endl;
-    }
     for (Facility *facility : facilities)
     {
         cout << "FacilityName: " << facility->getName() << endl;
         cout << "FacilityStatus: OPERATIONAL" << endl;
+    }
+    for (Facility *facility : underConstruction)
+    {
+        cout << "FacilityName: " << facility->getName() << endl;
+        cout << "FacilityStatus: UNDER_CONSTRUCTION" << endl;
     }
 }
 
