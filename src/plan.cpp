@@ -24,8 +24,8 @@ Plan::Plan(const Plan &other)
     }
 }
 
-Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions)
-    : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()),
+Plan::Plan(const Plan &other, const vector<FacilityType> &facilityOptions, const Settlement &settlement)
+    : plan_id(other.plan_id), settlement(settlement), selectionPolicy(other.selectionPolicy->clone()),
       status(other.status), facilities(vector<Facility *>()), underConstruction(vector<Facility *>()), facilityOptions(facilityOptions),
       life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score)
 {

@@ -15,7 +15,7 @@ class Plan
 {
 public:
     Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-    Plan(const Plan &other, const vector<FacilityType> &facilityOptions);
+    Plan(const Plan &other, const vector<FacilityType> &facilityOptions, const Settlement &settlement);
     const int getlifeQualityScore() const;
     const int getEconomyScore() const;
     const int getEnvironmentScore() const;

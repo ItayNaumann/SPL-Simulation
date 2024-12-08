@@ -240,10 +240,6 @@ Simulation &Simulation::operator=(const Simulation &other)
         isRunning = other.isRunning;
         planCounter = other.planCounter;
 
-        for (FacilityType facility : facilitiesOptions)
-        {
-            delete &facility;
-        }
         facilitiesOptions.clear();
         for (FacilityType facility : other.facilitiesOptions)
         {
@@ -260,13 +256,6 @@ Simulation &Simulation::operator=(const Simulation &other)
             actionsLog.push_back(action->clone());
         }
 
-        plans.clear();
-        for (Plan plan : other.plans)
-        {
-            Plan newPlan(plan, this->facilitiesOptions);
-            plans.push_back(newPlan);
-        }
-
         for (Settlement *settlement : settlements)
         {
             delete settlement;
@@ -275,6 +264,13 @@ Simulation &Simulation::operator=(const Simulation &other)
         for (Settlement *settlement : other.settlements)
         {
             settlements.push_back(new Settlement(*settlement));
+        }
+
+        plans.clear();
+        for (Plan plan : other.plans)
+        {
+            Plan newPlan(plan, this->facilitiesOptions, this->getSettlement(plan.getSettlement().getName()));
+            plans.push_back(newPlan);
         }
     }
     return *this;
@@ -315,16 +311,15 @@ Simulation::Simulation(const Simulation &other) : isRunning(other.isRunning), pl
         actionsLog.push_back(action->clone());
     }
 
-    for (Plan plan : other.plans)
-    {
-        Plan newPlan(plan, this->facilitiesOptions);
-        plans.push_back(newPlan);
-    }
-
-    settlements = vector<Settlement *>();
     for (Settlement *settlement : other.settlements)
     {
         settlements.push_back(new Settlement(*settlement));
+    }
+
+    for (Plan plan : other.plans)
+    {
+        Plan newPlan(plan, this->facilitiesOptions, this->getSettlement(plan.getSettlement().getName()));
+        plans.push_back(newPlan);
     }
 }
 
