@@ -215,7 +215,11 @@ void ChangePlanPolicy::act(Simulation &simulation)
     else
     {
         Plan &plan = simulation.getPlan(planId);
+        cout << "planID: " << plan.getPlanId() << endl;
+        cout << "previousPolicy: " << plan.getSelectionPolicy()->toLongString() << endl;
         plan.setSelectionPolicy(policy);
+        cout << "newPolicy: " << plan.getSelectionPolicy()->toLongString() << endl;
+
         complete();
     }
 }

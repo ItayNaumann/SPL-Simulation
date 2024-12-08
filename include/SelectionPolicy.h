@@ -9,6 +9,7 @@ class SelectionPolicy
 public:
     virtual const FacilityType &selectFacility(const vector<FacilityType> &facilitiesOptions) = 0;
     virtual const string toString() const = 0;
+    virtual const string toLongString() const = 0;
     virtual SelectionPolicy *clone() const = 0;
     virtual ~SelectionPolicy() = default;
 };
@@ -19,6 +20,7 @@ public:
     NaiveSelection();
     const FacilityType &selectFacility(const vector<FacilityType> &facilitiesOptions) override;
     const string toString() const override;
+    const string toLongString() const override;
     NaiveSelection *clone() const override;
     ~NaiveSelection() override = default;
 
@@ -32,6 +34,7 @@ public:
     BalancedSelection(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
     const FacilityType &selectFacility(const vector<FacilityType> &facilitiesOptions) override;
     const string toString() const override;
+    const string toLongString() const override;
     BalancedSelection *clone() const override;
     ~BalancedSelection() override = default;
     void updateScores(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
@@ -51,6 +54,7 @@ public:
     EconomySelection();
     const FacilityType &selectFacility(const vector<FacilityType> &facilitiesOptions) override;
     const string toString() const override;
+    const string toLongString() const override;
     EconomySelection *clone() const override;
     ~EconomySelection() override = default;
 
@@ -64,6 +68,7 @@ public:
     SustainabilitySelection();
     const FacilityType &selectFacility(const vector<FacilityType> &facilitiesOptions) override;
     const string toString() const override;
+    const string toLongString() const override;
     SustainabilitySelection *clone() const override;
     ~SustainabilitySelection() override = default;
 

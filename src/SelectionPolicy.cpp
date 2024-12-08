@@ -15,6 +15,10 @@ const string NaiveSelection::toString() const
 {
     return "nve";
 }
+const string NaiveSelection::toLongString() const
+{
+    return "Naive";
+}
 
 NaiveSelection *NaiveSelection::clone() const
 {
@@ -46,6 +50,10 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
 const string BalancedSelection::toString() const
 {
     return "bal";
+}
+const string BalancedSelection::toLongString() const
+{
+    return "Balanced";
 }
 BalancedSelection *BalancedSelection::clone() const
 {
@@ -108,6 +116,10 @@ const string EconomySelection::toString() const
 {
     return "eco";
 }
+const string EconomySelection::toLongString() const
+{
+    return "Economy";
+}
 
 EconomySelection *EconomySelection::clone() const
 {
@@ -137,6 +149,11 @@ const string SustainabilitySelection::toString() const
 {
     return "env";
 }
+const string SustainabilitySelection::toLongString() const
+{
+    return "Sustainability";
+}
+
 SustainabilitySelection *SustainabilitySelection::clone() const
 {
     SustainabilitySelection *output = new SustainabilitySelection();
