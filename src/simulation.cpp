@@ -317,7 +317,8 @@ Simulation::Simulation(const Simulation &other) : isRunning(other.isRunning), pl
 
     for (Plan plan : other.plans)
     {
-        plans.push_back(Plan(plan, this->facilitiesOptions));
+        Plan newPlan(plan, this->facilitiesOptions);
+        plans.push_back(newPlan);
     }
 
     settlements = vector<Settlement *>();
