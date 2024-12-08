@@ -71,27 +71,57 @@ void Simulation::start()
             string parsedAction = arguments.at(0);
             if (parsedAction == "step")
             {
-                action = new SimulateStep(stoi(arguments.at(1)));
+                if (arguments.size() != 2)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new SimulateStep(stoi(arguments.at(1)));
             }
             else if (parsedAction == "plan")
             {
-                action = new AddPlan(arguments.at(1), arguments.at(2));
+                if (arguments.size() != 3)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new AddPlan(arguments.at(1), arguments.at(2));
             }
             else if (parsedAction == "settlement")
             {
-                action = new AddSettlement(arguments.at(1), SettlementType(stoi(arguments.at(2))));
+                if (arguments.size() != 3)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new AddSettlement(arguments.at(1), SettlementType(stoi(arguments.at(2))));
             }
             else if (parsedAction == "facility")
             {
-                action = new AddFacility(arguments.at(1), FacilityCategory(stoi(arguments.at(2))), stoi(arguments.at(3)), stoi(arguments.at(4)), stoi(arguments.at(5)), stoi(arguments.at(6)));
+                if (arguments.size() != 7)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new AddFacility(arguments.at(1), FacilityCategory(stoi(arguments.at(2))), stoi(arguments.at(3)), stoi(arguments.at(4)), stoi(arguments.at(5)), stoi(arguments.at(6)));
             }
             else if (parsedAction == "planStatus")
             {
-                action = new PrintPlanStatus(stoi(arguments.at(1)));
+                if (arguments.size() != 2)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new PrintPlanStatus(stoi(arguments.at(1)));
             }
             else if (parsedAction == "changePolicy")
             {
-                action = new ChangePlanPolicy(stoi(arguments.at(1)), arguments.at(2));
+                if (arguments.size() != 3)
+                {
+                    cout << "Error: Invalid action" << endl;
+                }
+                else
+                    action = new ChangePlanPolicy(stoi(arguments.at(1)), arguments.at(2));
             }
             else if (parsedAction == "log")
             {
@@ -111,7 +141,7 @@ void Simulation::start()
             }
             else
             {
-                std::cout << "Invalid action " << parsedAction << std::endl;
+                std::cout << "Error: Invalid action " << parsedAction << std::endl;
             }
             if (action == nullptr)
                 continue;
@@ -121,7 +151,7 @@ void Simulation::start()
         }
         catch (const runtime_error &e)
         {
-            std::cout << "Invalid action" << std::endl;
+            std::cout << "Error: Invalid action" << std::endl;
         }
     }
 }
