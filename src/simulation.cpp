@@ -58,12 +58,14 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
 void Simulation::start()
 {
     isRunning = true;
+    std::cout << "The simulation has started" << std::endl;
+    BaseAction *action;
     while (isRunning)
     {
         string line;
         getline(std::cin, line);
         vector<string> arguments = Auxiliary::parseArguments(line);
-        BaseAction *action;
+        action = nullptr;
         try
         {
             string parsedAction = arguments.at(0);
@@ -109,16 +111,18 @@ void Simulation::start()
             }
             else
             {
-                std::cout << "Invalid action " << action << std::endl;
+                std::cout << "Invalid action " << parsedAction << std::endl;
             }
+            if (action == nullptr)
+                continue;
+
+            action->act(*this);
+            actionsLog.push_back(action);
         }
         catch (const runtime_error &e)
         {
             std::cout << "Invalid action" << std::endl;
         }
-
-        action->act(*this);
-        actionsLog.push_back(action);
     }
 }
 
@@ -132,8 +136,9 @@ void Simulation::step()
 
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy)
 {
-    Plan plan(planCounter++, settlement, selectionPolicy, facilitiesOptions);
+    Plan plan(planCounter, settlement, selectionPolicy, facilitiesOptions);
     plans.push_back(plan);
+    planCounter++;
 }
 
 bool Simulation::addSettlement(Settlement *settlement)
@@ -181,7 +186,7 @@ Plan &Simulation::getPlan(const int planID)
             return plan;
         }
     }
-    throw "Plan not found";
+    throw "Error: Plan doesn't exists";
 }
 
 Settlement &Simulation::getSettlement(const string &settlementName)
@@ -239,8 +244,7 @@ Simulation &Simulation::operator=(const Simulation &other)
         {
             delete &facility;
         }
-        delete &facilitiesOptions;
-        facilitiesOptions = vector<FacilityType>();
+        facilitiesOptions.clear();
         for (FacilityType facility : other.facilitiesOptions)
         {
             facilitiesOptions.push_back(FacilityType(facility));
@@ -250,29 +254,24 @@ Simulation &Simulation::operator=(const Simulation &other)
         {
             delete action;
         }
-        delete &actionsLog;
-        actionsLog = vector<BaseAction *>();
+        actionsLog.clear();
         for (BaseAction *action : other.actionsLog)
         {
             actionsLog.push_back(action->clone());
         }
 
-        for (Plan plan : plans)
-        {
-            delete &plan;
-        }
-        plans = vector<Plan>();
+        plans.clear();
         for (Plan plan : other.plans)
         {
-            plans.push_back(Plan(plan, this->facilitiesOptions));
+            Plan newPlan(plan, this->facilitiesOptions);
+            plans.push_back(newPlan);
         }
 
         for (Settlement *settlement : settlements)
         {
             delete settlement;
         }
-        delete &settlements;
-        settlements = vector<Settlement *>();
+        settlements.clear();
         for (Settlement *settlement : other.settlements)
         {
             settlements.push_back(new Settlement(*settlement));
@@ -283,29 +282,25 @@ Simulation &Simulation::operator=(const Simulation &other)
 
 Simulation::~Simulation()
 {
-    for (FacilityType facility : facilitiesOptions)
-    {
-        delete &facility;
-    }
-    delete &facilitiesOptions;
+    // for (FacilityType facility : facilitiesOptions)
+    // {
+    //     delete &facility;
+    // }
+
+    // for (Plan plan : plans)
+    // {
+    //     delete &plan;
+    // }
 
     for (BaseAction *action : actionsLog)
     {
         delete action;
     }
-    delete &actionsLog;
-
-    for (Plan plan : plans)
-    {
-        delete &plan;
-    }
-    delete &plans;
 
     for (Settlement *settlement : settlements)
     {
         delete settlement;
     }
-    delete &settlements;
 }
 
 Simulation::Simulation(const Simulation &other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(vector<BaseAction *>()), plans(vector<Plan>()), settlements(vector<Settlement *>()), facilitiesOptions(vector<FacilityType>())
@@ -349,18 +344,18 @@ Simulation &Simulation::operator=(Simulation &&other)
     {
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        actionsLog = std::move(actionsLog);
+        actionsLog = std::move(other.actionsLog);
         plans = std::move(other.plans);
         settlements = std::move(other.settlements);
         facilitiesOptions = std::move(other.facilitiesOptions);
 
-        // Move pointers to null
-        for (BaseAction *&ba : other.actionsLog)
-        {
-            ba = nullptr;
-        }
+        // Clear the source object
+        other.isRunning = false;
+        other.planCounter = 0;
         other.actionsLog.clear();
+        other.plans.clear();
+        other.settlements.clear();
+        other.facilitiesOptions.clear();
     }
-
     return *this;
 }

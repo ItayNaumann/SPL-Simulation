@@ -31,8 +31,7 @@ public:
     int getEconomyScore() const;
     FacilityCategory getCategory() const;
 
-    FacilityType(const FacilityType &other);
-    virtual ~FacilityType() = default;
+    
 
 protected:
     const string name;

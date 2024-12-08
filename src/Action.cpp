@@ -35,6 +35,7 @@ void SimulateStep::act(Simulation &simulation)
     {
         simulation.step();
     }
+    complete();
 }
 const string SimulateStep::toString() const
 {
@@ -54,11 +55,12 @@ void AddPlan::act(Simulation &simulation)
     if (!simulation.isSettlementExists(settlementName))
     {
         error("Cannot create this plan");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
         SelectionPolicy *policy = SelectionPolicyFactory::createPolicy(selectionPolicy, 0, 0, 0);
-        Settlement settlement = simulation.getSettlement(settlementName);
+        Settlement &settlement = simulation.getSettlement(settlementName);
         simulation.addPlan(settlement, policy);
         complete();
     }
@@ -82,6 +84,7 @@ void AddSettlement::act(Simulation &simulation)
     if (simulation.isSettlementExists(settlementName))
     {
         error("Settlement already exists");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
@@ -108,6 +111,7 @@ void AddFacility::act(Simulation &simulation)
     if (!simulation.addFacility(facility))
     {
         error("Facility already exists");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
@@ -135,6 +139,7 @@ void PrintPlanStatus::act(Simulation &simulation)
     if (!simulation.isPlanExists(planId))
     {
         error("Plan doesn't exist");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
@@ -165,6 +170,7 @@ void ChangePlanPolicy::act(Simulation &simulation)
     {
         delete policy;
         error("Cannot change selection policy");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
@@ -249,6 +255,7 @@ void RestoreSimulation::act(Simulation &simulation)
     if (backup == nullptr)
     {
         error("No backup available");
+        cout << "Error: " << this->getErrorMsg() << endl;
     }
     else
     {
