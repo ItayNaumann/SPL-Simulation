@@ -45,6 +45,14 @@ const string SimulateStep::toString() const
 SimulateStep *SimulateStep::clone() const
 {
     SimulateStep *clone = new SimulateStep(numOfSteps);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 
@@ -73,6 +81,14 @@ const string AddPlan::toString() const
 AddPlan *AddPlan::clone() const
 {
     AddPlan *clone = new AddPlan(settlementName, selectionPolicy);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 
@@ -95,6 +111,14 @@ void AddSettlement::act(Simulation &simulation)
 AddSettlement *AddSettlement::clone() const
 {
     AddSettlement *clone = new AddSettlement(settlementName, settlementType);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string AddSettlement::toString() const
@@ -122,6 +146,14 @@ void AddFacility::act(Simulation &simulation)
 AddFacility *AddFacility::clone() const
 {
     AddFacility *clone = new AddFacility(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string AddFacility::toString() const
@@ -151,6 +183,14 @@ void PrintPlanStatus::act(Simulation &simulation)
 PrintPlanStatus *PrintPlanStatus::clone() const
 {
     PrintPlanStatus *clone = new PrintPlanStatus(planId);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string PrintPlanStatus::toString() const
@@ -182,6 +222,14 @@ void ChangePlanPolicy::act(Simulation &simulation)
 ChangePlanPolicy *ChangePlanPolicy::clone() const
 {
     ChangePlanPolicy *clone = new ChangePlanPolicy(planId, newPolicy);
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string ChangePlanPolicy::toString() const
@@ -204,6 +252,14 @@ void PrintActionsLog::act(Simulation &simulation)
 PrintActionsLog *PrintActionsLog::clone() const
 {
     PrintActionsLog *clone = new PrintActionsLog();
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string PrintActionsLog::toString() const
@@ -222,6 +278,14 @@ void Close::act(Simulation &simulation)
 Close *Close::clone() const
 {
     Close *clone = new Close();
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string Close::toString() const
@@ -240,6 +304,14 @@ void BackupSimulation::act(Simulation &simulation)
 BackupSimulation *BackupSimulation::clone() const
 {
     BackupSimulation *clone = new BackupSimulation();
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 const string BackupSimulation::toString() const
@@ -267,6 +339,14 @@ void RestoreSimulation::act(Simulation &simulation)
 RestoreSimulation *RestoreSimulation::clone() const
 {
     RestoreSimulation *clone = new RestoreSimulation();
+    if (this->getStatus() == ActionStatus::COMPLETED)
+    {
+        clone->complete();
+    }
+    else
+    {
+        clone->error(this->getErrorMsg());
+    }
     return clone;
 }
 
